@@ -73,8 +73,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
   });
 
   function loop(){
-    x += (tx - x) * 0.50; //mouse speed
-    y += (ty - y) * 0.50;
+    x += (tx - x) * 1.0; //mouse speed
+    y += (ty - y) * 1.0;
     el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     requestAnimationFrame(loop);
   }
