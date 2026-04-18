@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Logeshwaran — ECE Student, Developer & Problem Solver</title>
+<meta name="description" content="Portfolio of Logeshwaran — ECE student, developer, and problem solver building real-world projects with web, IoT, and AI." />
+<link rel="canonical" href="/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ===== Preloader ===== -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="pre-label">Loading portfolio</div>
+    <div class="pre-counter"><span id="preCount">0</span><span class="pre-pct">%</span></div>
+    <div class="pre-bar"><div class="pre-bar-fill" id="preBar"></div></div>
+  </div>
+  <div class="curtain curtain-top"></div>
+  <div class="curtain curtain-bottom"></div>
+</div>
+
+<!-- ===== Scroll progress ===== -->
+<div class="scroll-progress"><div id="scrollBar"></div></div>
+
+<!-- ===== Custom cursor ===== -->
+<div class="cursor" id="cursor"></div>
+
+<!-- ===== Navbar ===== -->
+<header class="nav">
+  <div class="nav-pill" id="navPill">
+    <a href="#home" class="nav-logo">
+      <span class="logo-dot"></span>
+      <span class="font-display">Logesh</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Stack</a>
+      <a href="#projects">Work</a>
+      <a href="#achievements">Wins</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="nav-cta">Hire me</a>
+    <button class="nav-burger" id="navBurger" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="#about">About</a>
+    <a href="#skills">Stack</a>
+    <a href="#projects">Work</a>
+    <a href="#achievements">Wins</a>
+    <a href="#services">Services</a>
+    <a href="#contact">Contact</a>
+    <a href="#contact" class="nav-mobile-cta">Hire me</a>
+  </div>
+</header>
+
+<main>
+
+<!-- ===== Hero ===== -->
+<section id="home" class="hero">
+  <div class="grid-bg"></div>
+  <div class="gradient-radial"></div>
+  <div class="hero-orb"></div>
+  <div class="noise"></div>
+
+  <div class="container hero-container">
+    <div class="hero-status hero-fade">
+      <span class="status-ping"><span></span><span></span></span>
+      Available for projects · 2026
+    </div>
+
+    <div class="hero-grid">
+      <div class="hero-headline">
+        <h1 class="hero-title font-display">
+          <span class="reveal-line"><span>Building</span></span>
+          <span class="reveal-line"><span>digital things</span></span>
+          <span class="reveal-line">
+            <span>
+              with
+              <span class="role-wrap"><span id="roleText" class="text-lime italic">Developer.</span></span>
+            </span>
+          </span>
+        </h1>
+      </div>
+
+      <div class="portrait-wrap">
+        <div class="portrait-tilt" id="portraitTilt">
+          <div class="portrait-glow"></div>
+          <div class="portrait-ring"></div>
+          <div class="portrait-frame">
+            <img src="assets/logesh-portrait.png" alt="Logeshwaran portrait" />
+          </div>
+          <div class="sticker sticker-bl">ECE · 2nd yr</div>
+          <div class="sticker sticker-tr">✦ Logesh</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-bottom">
+      <p class="hero-fade hero-bio">
+        <span class="hero-bio-name">Logeshwaran</span> — 2nd-year ECE student crafting real-world solutions across web, IoT and AI. Currently exploring the edges of hardware × software.
+      </p>
+      <div class="hero-fade hero-ctas">
+        <a href="#projects" class="btn-lime magnetic">
+          Selected work
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+        </a>
+        <a href="#contact" class="btn-ghost magnetic">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Let's collaborate
+        </a>
+      </div>
+    </div>
+
+    <div class="marquee-wrap">
+      <div class="marquee">
+        <div class="marquee-track">
+          <span>React</span><span class="lime">✦</span>
+          <span>Flutter</span><span class="lime">✦</span>
+          <span>Python</span><span class="lime">✦</span>
+          <span>IoT</span><span class="lime">✦</span>
+          <span>GSAP</span><span class="lime">✦</span>
+          <span>Embedded</span><span class="lime">✦</span>
+          <span>Automation</span><span class="lime">✦</span>
+          <span>AI</span><span class="lime">✦</span>
+        </div>
+        <div class="marquee-track" aria-hidden="true">
+          <span>React</span><span class="lime">✦</span>
+          <span>Flutter</span><span class="lime">✦</span>
+          <span>Python</span><span class="lime">✦</span>
+          <span>IoT</span><span class="lime">✦</span>
+          <span>GSAP</span><span class="lime">✦</span>
+          <span>Embedded</span><span class="lime">✦</span>
+          <span>Automation</span><span class="lime">✦</span>
+          <span>AI</span><span class="lime">✦</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== About ===== -->
+<section id="about" class="section">
+  <div class="container">
+    <div class="sh">
+      <div class="sh-eyebrow"><span class="eb-line"></span>About</div>
+      <h2 class="sh-title font-display">An <em class="text-lime">engineer</em><br/>who builds, ships, repeats.</h2>
+      <p class="sh-desc">2nd-year ECE student exploring the intersection of software and hardware. I love turning curious ideas into real, working products — from web apps to connected devices.</p>
+    </div>
+    <div class="grid-3">
+      <article class="about-card bento tilt" data-tilt="6">
+        <div class="bento-glow"></div>
+        <svg class="card-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <h3 class="font-display">Software</h3>
+        <p>Crafting websites, mobile apps and AI experiments. Comfortable across React, Flutter and Python.</p>
+      </article>
+      <article class="about-card bento tilt" data-tilt="6">
+        <div class="bento-glow"></div>
+        <svg class="card-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+        <h3 class="font-display">Hardware</h3>
+        <p>Building IoT systems and embedded prototypes. Internships at NSIC Guindy in IoT & Embedded Systems.</p>
+      </article>
+      <article class="about-card bento tilt" data-tilt="6">
+        <div class="bento-glow"></div>
+        <svg class="card-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <h3 class="font-display">Problem-solving</h3>
+        <p>400+ on GeeksforGeeks, 50+ on LeetCode and a 1st prize at an inter-college Codathon.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Skills ===== -->
+<section id="skills" class="section">
+  <div class="container">
+    <div class="sh">
+      <div class="sh-eyebrow"><span class="eb-line"></span>Stack</div>
+      <h2 class="sh-title font-display">Tools of the <em class="text-lime">trade.</em></h2>
+      <p class="sh-desc">A growing toolkit across languages, frameworks and tinkering tools I use daily.</p>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-list">
+        <!-- skills injected by JS for cleanliness -->
+      </div>
+
+      <aside class="bento skill-aside">
+        <div class="bento-glow"></div>
+        <p class="overline">Daily tools</p>
+        <div class="tool-cloud">
+          <span class="tool-pill">GSAP</span>
+          <span class="tool-pill">Claude</span>
+          <span class="tool-pill">Lovable</span>
+          <span class="tool-pill">Cursor</span>
+          <span class="tool-pill">Emergent</span>
+          <span class="tool-pill">Antigravity</span>
+          <span class="tool-pill">Google Stitch</span>
+        </div>
+        <div class="focus-areas">
+          <p class="overline">Focus areas</p>
+          <ul class="font-display">
+            <li>Web Development</li>
+            <li>IoT Systems</li>
+            <li>Automation</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Projects ===== -->
+<section id="projects" class="section">
+  <div class="container">
+    <div class="sh">
+      <div class="sh-eyebrow"><span class="eb-line"></span>Work</div>
+      <h2 class="sh-title font-display">Selected <em class="text-lime">projects.</em></h2>
+      <p class="sh-desc">A small set of things I've built across software, mobile and hardware.</p>
+    </div>
+
+    <div class="projects-grid">
+      <article class="project-card span-7 bento tilt" data-tilt="4">
+        <div class="bento-glow"></div>
+        <div class="project-top">
+          <span class="overline">01 / AI · Deep Learning</span>
+          <span class="status-pill status-research">Research</span>
+        </div>
+        <h3 class="font-display project-title">Sign Language Detection</h3>
+        <p class="project-desc">Real-time sign language recognition using CNNs with a web interface for live demo.</p>
+        <div class="project-foot">
+          <div class="tech-tags">
+            <span>Python</span><span>TensorFlow</span><span>OpenCV</span><span>Web</span>
+          </div>
+          <div class="arrow-circle">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <article class="project-card span-5 bento tilt" data-tilt="4">
+        <div class="bento-glow"></div>
+        <div class="project-top">
+          <span class="overline">02 / Mobile · Flutter</span>
+          <span class="status-pill">Shipped</span>
+        </div>
+        <h3 class="font-display project-title">Expense Tracker</h3>
+        <p class="project-desc">Clean, fast Flutter app to log and visualize daily spending with categories & insights.</p>
+        <div class="project-foot">
+          <div class="tech-tags"><span>Flutter</span><span>Dart</span></div>
+          <div class="arrow-circle">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <article class="project-card span-12 bento tilt" data-tilt="4">
+        <div class="bento-glow"></div>
+        <div class="project-top">
+          <span class="overline">03 / Hardware · Mobile</span>
+          <span class="status-pill status-research">In progress</span>
+        </div>
+        <h3 class="font-display project-title">IoT Home Automation</h3>
+        <p class="project-desc">Real-time monitoring & control of home devices via a companion app. Built with my team.</p>
+        <div class="project-foot">
+          <div class="tech-tags"><span>IoT</span><span>Embedded</span><span>Mobile</span></div>
+          <div class="arrow-circle">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HORIZONTAL PINNED CASE STUDIES ===== -->
+<section id="case-studies" class="hpin">
+  <div class="hpin-track" id="hpinTrack">
+    <div class="hpin-intro">
+      <div class="overline">Case studies</div>
+      <h2 class="font-display hpin-heading">Scroll<br/>sideways<em class="text-lime">.</em></h2>
+      <p class="sh-desc">Deeper dives into the projects above — drag of the wheel, slide of the world.</p>
+    </div>
+
+    <article class="hpin-panel">
+      <span class="overline">Case 01 — AI</span>
+      <h3 class="font-display">Sign Language Detection</h3>
+      <p>A custom CNN trained on a curated dataset of hand poses, served through a lightweight web client. Latency hits ~80ms on commodity hardware, with confidence overlays in real time.</p>
+      <div class="hpin-stats">
+        <div><span class="stat-num text-lime">94%</span><small>Accuracy</small></div>
+        <div><span class="stat-num text-lime">80<i>ms</i></span><small>Latency</small></div>
+        <div><span class="stat-num text-lime">26</span><small>Signs</small></div>
+      </div>
+    </article>
+
+    <article class="hpin-panel">
+      <span class="overline">Case 02 — Mobile</span>
+      <h3 class="font-display">Expense Tracker</h3>
+      <p>A Flutter app with offline-first persistence, clean Material 3 visuals, weekly trend charts and category breakdowns. Designed for one-handed use and zero friction logging.</p>
+      <div class="hpin-stats">
+        <div><span class="stat-num text-lime">3s</span><small>To log</small></div>
+        <div><span class="stat-num text-lime">12</span><small>Categories</small></div>
+        <div><span class="stat-num text-lime">100%</span><small>Offline</small></div>
+      </div>
+    </article>
+
+    <article class="hpin-panel">
+      <span class="overline">Case 03 — IoT</span>
+      <h3 class="font-display">Home Automation</h3>
+      <p>ESP32 nodes paired with MQTT and a Flutter dashboard. Live telemetry, scheduled scenes and a hardware-level fail-safe so the home never bricks if the cloud blinks.</p>
+      <div class="hpin-stats">
+        <div><span class="stat-num text-lime">8</span><small>Devices</small></div>
+        <div><span class="stat-num text-lime">MQTT</span><small>Protocol</small></div>
+        <div><span class="stat-num text-lime">24/7</span><small>Uptime</small></div>
+      </div>
+    </article>
+
+    <div class="hpin-end">
+      <h3 class="font-display">More on the way<em class="text-lime">.</em></h3>
+      <a href="#contact" class="btn-lime magnetic">Got an idea? Let's talk
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STICKY SCRAMBLE HEADLINE ===== -->
+<section id="scramble" class="scramble-section">
+  <div class="scramble-sticky">
+    <div class="container">
+      <div class="overline">Manifesto</div>
+      <h2 class="scramble-headline font-display">
+        I <em class="text-lime">build</em> <span class="scramble-word" id="scrambleWord">SOFTWARE</span>
+      </h2>
+      <p class="scramble-sub" id="scrambleSub">software that ships fast and feels alive.</p>
+      <div class="scramble-progress"><div id="scrambleBar"></div></div>
+    </div>
+  </div>
+  <div class="scramble-spacer"></div>
+</section>
+
+<!-- ===== Achievements ===== -->
+<section id="achievements" class="section">
+  <div class="container">
+    <div class="sh">
+      <div class="sh-eyebrow"><span class="eb-line"></span>Wins</div>
+      <h2 class="sh-title font-display">Numbers & <em class="text-lime">milestones.</em></h2>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card bento">
+        <div class="bento-glow"></div>
+        <div class="stat-num-big text-lime font-display"><span class="counter" data-to="400">0</span>+</div>
+        <p>Problems solved on GeeksforGeeks</p>
+      </div>
+      <div class="stat-card bento">
+        <div class="bento-glow"></div>
+        <div class="stat-num-big text-lime font-display"><span class="counter" data-to="50">0</span>+</div>
+        <p>Solved on LeetCode</p>
+      </div>
+      <div class="stat-card bento">
+        <div class="bento-glow"></div>
+        <div class="stat-num-big text-lime font-display"><span class="counter" data-to="1">0</span>st</div>
+        <p>Place — Inter-college Codathon</p>
+      </div>
+      <div class="stat-card bento">
+        <div class="bento-glow"></div>
+        <div class="stat-num-big text-lime font-display"><span class="counter" data-to="2">0</span></div>
+        <p>Internships in IoT & Embedded (NSIC Guindy)</p>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item"><span class="overline">2024</span><h4 class="font-display">Codathon Champion</h4><p>1st prize at the inter-college Codathon competition.</p></div>
+      <div class="tl-item"><span class="overline">2024</span><h4 class="font-display">IoT Internship — NSIC Guindy</h4><p>Hands-on IoT and embedded systems training.</p></div>
+      <div class="tl-item"><span class="overline">2024</span><h4 class="font-display">Certifications</h4><p>Python, Java and Web Development (Udemy & Google).</p></div>
+      <div class="tl-item"><span class="overline">Now</span><h4 class="font-display">Building & Solving</h4><p>400+ GfG · 50+ LeetCode · IoT home automation in dev.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Services ===== -->
+<section id="services" class="section">
+  <div class="container">
+    <div class="sh">
+      <div class="sh-eyebrow"><span class="eb-line"></span>Services</div>
+      <h2 class="sh-title font-display">What I can <em class="text-lime">do for you.</em></h2>
+    </div>
+    <div class="grid-3">
+      <article class="service-card bento tilt" data-tilt="5">
+        <div class="bento-glow"></div>
+        <div class="service-top">
+          <svg class="card-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+          <span class="overline">S/01</span>
+        </div>
+        <h3 class="font-display">Website development</h3>
+        <p>Modern, fast, hand-crafted websites for small-scale industries and personal brands.</p>
+      </article>
+      <article class="service-card bento tilt" data-tilt="5">
+        <div class="bento-glow"></div>
+        <div class="service-top">
+          <svg class="card-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h.01M16 16h.01"/></svg>
+          <span class="overline">S/02</span>
+        </div>
+        <h3 class="font-display">Automation solutions</h3>
+        <p>Practical software + IoT automation to remove repetitive work from your day.</p>
+      </article>
+      <article class="service-card bento tilt" data-tilt="5">
+        <div class="bento-glow"></div>
+        <div class="service-top">
+          <svg class="card-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/></svg>
+          <span class="overline">S/03</span>
+        </div>
+        <h3 class="font-display">Custom projects</h3>
+        <p>From concept to working prototype — web, mobile or hardware-integrated builds.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Contact ===== -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="sh">
+      <div class="sh-eyebrow"><span class="eb-line"></span>Contact</div>
+      <h2 class="sh-title font-display">Let's build <em class="text-lime">something.</em></h2>
+      <p class="sh-desc">Got a project, idea or just want to chat tech? Drop a line.</p>
+    </div>
+
+    <div class="contact-grid">
+      <form class="contact-form" id="contactForm">
+        <div class="field"><label>Name</label><input name="name" type="text" required /></div>
+        <div class="field"><label>Email</label><input name="email" type="email" required /></div>
+        <div class="field"><label>Message</label><textarea name="message" rows="4" required></textarea></div>
+        <button type="submit" class="btn-lime magnetic">
+          Send message
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+        </button>
+      </form>
+
+      <ul class="social-list">
+        <li><a class="social-row" href="mailto:mlogeshwaran2007@gmail.com"><span class="font-display">Email</span><span>mlogeshwaran2007@gmail.com</span></a></li>
+        <li><a class="social-row" href="https://github.com/logesh-profile" target="_blank" rel="noopener"><span class="font-display">GitHub</span><span>@logesh-profile</span></a></li>
+        <li><a class="social-row" href="https://www.linkedin.com/in/logeshwaran-m-4a0551335" target="_blank" rel="noopener"><span class="font-display">LinkedIn</span><span>logeshwaran-m</span></a></li>
+        <li><a class="social-row" href="https://leetcode.com/u/Logeshwaran_18/" target="_blank" rel="noopener"><span class="font-display">LeetCode</span><span>Logeshwaran_18</span></a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <div class="footer-brand"><span class="logo-dot"></span><span class="font-display">Logeshwaran</span></div>
+      <p class="overline">ECE Student· Developer · Problem Solver</p>
+    </div>
+    <div class="overline">© <span id="year"></span> — Crafted with care · Chennai, IN</div>
+  </div>
+</footer>
+
+</main>
+
+<!-- Toast container -->
+<div class="toast" id="toast"></div>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
