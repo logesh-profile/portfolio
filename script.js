@@ -73,8 +73,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
   });
 
   function loop(){
-    x += (tx - x) * 0.18; // slightly laggy = watery feel
-    y += (ty - y) * 0.18;
+    x += (tx - x) * 1; //mouse speed
+    y += (ty - y) * 1;
     el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     requestAnimationFrame(loop);
   }
@@ -95,31 +95,14 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 /* ---------- Navbar ---------- */
 (function navbar(){
-  const pill   = document.getElementById('navPill');
+  const pill = document.getElementById('navPill');
   const burger = document.getElementById('navBurger');
   const mobile = document.getElementById('navMobile');
-
-  // Replace burger inner with animated spans
-  burger.innerHTML = `<div class="nav-burger-inner">
-    <span></span><span></span><span></span>
-  </div>`;
-
   window.addEventListener('scroll', () => {
     pill.classList.toggle('scrolled', window.scrollY > 30);
   });
-
-  burger.addEventListener('click', () => {
-    const isOpen = mobile.classList.toggle('open');
-    burger.classList.toggle('active', isOpen);
-    // Prevent body scroll when mobile nav open
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  });
-
-  mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    mobile.classList.remove('open');
-    burger.classList.remove('active');
-    document.body.style.overflow = '';
-  }));
+  burger.addEventListener('click', () => mobile.classList.toggle('open'));
+  mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobile.classList.remove('open')));
 })();
 
 /* ---------- Hero role rotator ---------- */
@@ -138,24 +121,11 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }, 2400);
 })();
 
-/* ---------- Hero portrait — spotlight mask reveal (desktop only) ---------- */
+/* ---------- Hero portrait — spotlight mask reveal ---------- */
 (function portraitMask(){
   const tilt  = document.getElementById('portraitTilt');
   const frame = tilt ? tilt.querySelector('.portrait-frame') : null;
   if (!frame) return;
-
-  // On mobile: just show full colour image, skip mask entirely
-  if (window.matchMedia('(max-width: 768px)').matches) {
-    const img = frame.querySelector('img');
-    if (img) {
-      img.className = 'img-base';
-      img.style.filter = 'none';
-      // add hint-free second img so CSS layers still exist safely
-      const r = img.cloneNode(); r.className = 'img-reveal'; r.style.opacity = '0';
-      frame.appendChild(r);
-    }
-    return;
-  }
 
   // Get the existing <img> src, then rebuild the two-layer structure
   const originalImg = frame.querySelector('img');
@@ -247,19 +217,13 @@ document.getElementById('year').textContent = new Date().getFullYear();
   loop();
 })();
 
-/* ---------- Hero scroll parallax (desktop only — mobile gets simpler fade) ---------- */
-if (!isMobile) {
-  gsap.to('.portrait-wrap', { yPercent: -18, ease: "none",
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
-  gsap.to('.hero-headline', { yPercent: 12, opacity: 0.6, ease: "none",
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
-  gsap.to('.hero-orb', { yPercent: -40, ease: "none",
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
-} else {
-  // Mobile: subtle fade-out as you scroll away from hero
-  gsap.to('.hero-container', { opacity: 0.3, ease: "none",
-    scrollTrigger: { trigger: '.hero', start: '60% top', end: 'bottom top', scrub: 0.8 } });
-}
+/* ---------- Hero scroll parallax ---------- */
+gsap.to('.portrait-wrap', { yPercent: -18, ease: "none",
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
+gsap.to('.hero-headline', { yPercent: 12, opacity: 0.6, ease: "none",
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
+gsap.to('.hero-orb', { yPercent: -40, ease: "none",
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
 
 /* ---------- Magnetic buttons ---------- */
 document.querySelectorAll('.magnetic').forEach(el => {
@@ -351,19 +315,14 @@ document.querySelectorAll('.sh').forEach(sh => {
 });
 
 /* ---------- About / Service / Project / Stat scrub entrances + drift ---------- */
-const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
 function scrubReveal(selector, opts = {}) {
   const { rotateAlt = true, drift = true, driftAmt = 14 } = opts;
   document.querySelectorAll(selector).forEach((card, i) => {
-    // On mobile: simpler fade+slide, no rotation, lighter drift
-    const mRotate = 0;
-    const dRotate = rotateAlt ? (i % 2 === 0 ? -4 : 4) : 0;
     gsap.fromTo(card,
-      { opacity: 0, y: isMobile ? 50 : 100, scale: isMobile ? 0.95 : 0.85, rotate: isMobile ? mRotate : dRotate },
+      { opacity: 0, y: 100, scale: 0.85, rotate: rotateAlt ? (i % 2 === 0 ? -4 : 4) : 0 },
       { opacity: 1, y: 0, scale: 1, rotate: 0, ease: "none",
         scrollTrigger: { trigger: card, start: 'top 95%', end: 'top 55%', scrub: 0.8 } });
-    if (drift && !isMobile) {
+    if (drift) {
       gsap.to(card, { yPercent: i % 2 === 0 ? -driftAmt : -(driftAmt + 8), ease: "none",
         scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1.2 } });
     }
