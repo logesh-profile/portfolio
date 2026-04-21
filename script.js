@@ -73,8 +73,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
   });
 
   function loop(){
-    x += (tx - x) * 1.0; //mouse speed
-    y += (ty - y) * 1.0;
+    x += (tx - x) * 0.18; // slightly laggy = watery feel
+    y += (ty - y) * 0.18;
     el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     requestAnimationFrame(loop);
   }
@@ -95,14 +95,31 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 /* ---------- Navbar ---------- */
 (function navbar(){
-  const pill = document.getElementById('navPill');
+  const pill   = document.getElementById('navPill');
   const burger = document.getElementById('navBurger');
   const mobile = document.getElementById('navMobile');
+
+  // Replace burger inner with animated spans
+  burger.innerHTML = `<div class="nav-burger-inner">
+    <span></span><span></span><span></span>
+  </div>`;
+
   window.addEventListener('scroll', () => {
     pill.classList.toggle('scrolled', window.scrollY > 30);
   });
-  burger.addEventListener('click', () => mobile.classList.toggle('open'));
-  mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobile.classList.remove('open')));
+
+  burger.addEventListener('click', () => {
+    const isOpen = mobile.classList.toggle('open');
+    burger.classList.toggle('active', isOpen);
+    // Prevent body scroll when mobile nav open
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    mobile.classList.remove('open');
+    burger.classList.remove('active');
+    document.body.style.overflow = '';
+  }));
 })();
 
 /* ---------- Hero role rotator ---------- */
@@ -121,26 +138,128 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }, 2400);
 })();
 
-/* ---------- Hero portrait 3D tilt ---------- */
-(function portraitTilt(){
-  const el = document.getElementById('portraitTilt');
-  if (!el) return;
-  el.addEventListener('mousemove', (e) => {
-    const r = el.getBoundingClientRect();
-    const x = (e.clientX - r.left - r.width/2) / r.width;
-    const y = (e.clientY - r.top - r.height/2) / r.height;
-    gsap.to(el, { rotateY: x * 8, rotateX: -y * 8, duration: 0.6, ease: "power3.out", transformPerspective: 800 });
+/* ---------- Hero portrait — spotlight mask reveal (desktop only) ---------- */
+(function portraitMask(){
+  const tilt  = document.getElementById('portraitTilt');
+  const frame = tilt ? tilt.querySelector('.portrait-frame') : null;
+  if (!frame) return;
+
+  // On mobile: just show full colour image, skip mask entirely
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    const img = frame.querySelector('img');
+    if (img) {
+      img.className = 'img-base';
+      img.style.filter = 'none';
+      // add hint-free second img so CSS layers still exist safely
+      const r = img.cloneNode(); r.className = 'img-reveal'; r.style.opacity = '0';
+      frame.appendChild(r);
+    }
+    return;
+  }
+
+  // Get the existing <img> src, then rebuild the two-layer structure
+  const originalImg = frame.querySelector('img');
+  const src = originalImg ? originalImg.getAttribute('src') : '';
+  const alt = originalImg ? originalImg.getAttribute('alt') : '';
+
+  // Clear and rebuild
+  frame.innerHTML = '';
+
+  // Layer 1 — grayscale dark base (always visible)
+  const imgBase = document.createElement('img');
+  imgBase.src = src; imgBase.alt = alt;
+  imgBase.className = 'img-base';
+  frame.appendChild(imgBase);
+
+  // Layer 2 — full colour, revealed by mask
+  const imgReveal = document.createElement('img');
+  imgReveal.src = src; imgReveal.alt = alt;
+  imgReveal.className = 'img-reveal';
+  frame.appendChild(imgReveal);
+
+  // Glow ring that follows the mask circle
+  const glowEl = document.createElement('div');
+  glowEl.className = 'mask-glow';
+  frame.appendChild(glowEl);
+
+  // Idle hint
+  const hint = document.createElement('div');
+  hint.className = 'mask-hint';
+  hint.textContent = '✦ Hover to reveal';
+  frame.appendChild(hint);
+
+  // Mask radius — starts at 0, expands on enter
+  const RADIUS = 90; // px — spotlight size
+  let currentR = 0;
+  let targetR  = 0;
+  let mx = 0, my = 0; // mouse pos relative to frame
+  let isHovered = false;
+  let rafId = null;
+
+  function applyMask(x, y, r){
+    const mask = `radial-gradient(circle ${r}px at ${x}px ${y}px, black 55%, transparent 80%)`;
+    imgReveal.style.webkitMaskImage = mask;
+    imgReveal.style.maskImage       = mask;
+    // Move glow ring
+    glowEl.style.left   = x + 'px';
+    glowEl.style.top    = y + 'px';
+    glowEl.style.width  = r * 2 + 'px';
+    glowEl.style.height = r * 2 + 'px';
+    glowEl.style.opacity = r > 5 ? '1' : '0';
+  }
+
+  function loop(){
+    // Smoothly interpolate radius
+    currentR += (targetR - currentR) * 0.12;
+    applyMask(mx, my, currentR);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  // 3D tilt + mask mouse tracking
+  tilt.addEventListener('mousemove', (e) => {
+    const r = frame.getBoundingClientRect();
+    mx = e.clientX - r.left;
+    my = e.clientY - r.top;
+
+    // Also do the 3D tilt on the tilt container
+    const tr = tilt.getBoundingClientRect();
+    const tx = (e.clientX - tr.left - tr.width/2)  / tr.width;
+    const ty = (e.clientY - tr.top  - tr.height/2) / tr.height;
+    gsap.to(tilt, { rotateY: tx * 8, rotateX: -ty * 8, duration: 0.5, ease: "power3.out", transformPerspective: 800 });
   });
-  el.addEventListener('mouseleave', () => gsap.to(el, { rotateX: 0, rotateY: 0, duration: 0.8, ease: "expo.out" }));
+
+  tilt.addEventListener('mouseenter', () => {
+    isHovered = true;
+    targetR = RADIUS;
+    if (!rafId) loop();
+  });
+
+  tilt.addEventListener('mouseleave', () => {
+    isHovered = false;
+    targetR = 0;
+    gsap.to(tilt, { rotateX: 0, rotateY: 0, duration: 0.8, ease: "expo.out" });
+    // Stop loop once radius fully collapses
+    const check = setInterval(() => {
+      if (currentR < 1){ currentR = 0; cancelAnimationFrame(rafId); rafId = null; clearInterval(check); }
+    }, 50);
+  });
+
+  loop();
 })();
 
-/* ---------- Hero scroll parallax ---------- */
-gsap.to('.portrait-wrap', { yPercent: -18, ease: "none",
-  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
-gsap.to('.hero-headline', { yPercent: 12, opacity: 0.6, ease: "none",
-  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
-gsap.to('.hero-orb', { yPercent: -40, ease: "none",
-  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+/* ---------- Hero scroll parallax (desktop only — mobile gets simpler fade) ---------- */
+if (!isMobile) {
+  gsap.to('.portrait-wrap', { yPercent: -18, ease: "none",
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
+  gsap.to('.hero-headline', { yPercent: 12, opacity: 0.6, ease: "none",
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
+  gsap.to('.hero-orb', { yPercent: -40, ease: "none",
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+} else {
+  // Mobile: subtle fade-out as you scroll away from hero
+  gsap.to('.hero-container', { opacity: 0.3, ease: "none",
+    scrollTrigger: { trigger: '.hero', start: '60% top', end: 'bottom top', scrub: 0.8 } });
+}
 
 /* ---------- Magnetic buttons ---------- */
 document.querySelectorAll('.magnetic').forEach(el => {
@@ -232,14 +351,19 @@ document.querySelectorAll('.sh').forEach(sh => {
 });
 
 /* ---------- About / Service / Project / Stat scrub entrances + drift ---------- */
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
 function scrubReveal(selector, opts = {}) {
   const { rotateAlt = true, drift = true, driftAmt = 14 } = opts;
   document.querySelectorAll(selector).forEach((card, i) => {
+    // On mobile: simpler fade+slide, no rotation, lighter drift
+    const mRotate = 0;
+    const dRotate = rotateAlt ? (i % 2 === 0 ? -4 : 4) : 0;
     gsap.fromTo(card,
-      { opacity: 0, y: 100, scale: 0.85, rotate: rotateAlt ? (i % 2 === 0 ? -4 : 4) : 0 },
+      { opacity: 0, y: isMobile ? 50 : 100, scale: isMobile ? 0.95 : 0.85, rotate: isMobile ? mRotate : dRotate },
       { opacity: 1, y: 0, scale: 1, rotate: 0, ease: "none",
         scrollTrigger: { trigger: card, start: 'top 95%', end: 'top 55%', scrub: 0.8 } });
-    if (drift) {
+    if (drift && !isMobile) {
       gsap.to(card, { yPercent: i % 2 === 0 ? -driftAmt : -(driftAmt + 8), ease: "none",
         scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1.2 } });
     }
