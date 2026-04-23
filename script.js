@@ -426,8 +426,8 @@ gsap.utils.toArray('.counter').forEach(el => {
 
   const phrases = [
     { word: "SOFTWARE", sub: "software that ships fast and feels alive." },
-    { word: "INTERFACES", sub: "interfaces that respect attention and reward curiosity." },
-    { word: "HARDWARE", sub: "hardware that bridges atoms with bytes." },
+    { word: "WEBSITES", sub: "responsive websites that respect attention and reward curiosity." },
+    { word: "IOT PROJECTS", sub: "hardware that bridges atoms with bytes." },
     { word: "SYSTEMS",  sub: "systems that scale calmly under pressure." },
     { word: "FUTURES",  sub: "futures we get to design — one experiment at a time." },
   ];
