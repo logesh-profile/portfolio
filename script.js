@@ -504,5 +504,226 @@ if (form) {
   });
 }
 
+/* ---------- Project image fallback (graceful placeholder if asset is missing) ---------- */
+(function projectImgFallback(){
+  const placeholderSVG = (label) => {
+    const safe = (label || 'Project preview').slice(0, 40);
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450'>
+      <rect width='100%' height='100%' fill='hsl(0,0%,7%)'/>
+      <rect x='0' y='0' width='100%' height='100%' fill='url(#g)'/>
+      <defs><radialGradient id='g' cx='50%' cy='40%' r='70%'>
+        <stop offset='0%' stop-color='hsl(72,100%,61%,0.12)'/>
+        <stop offset='100%' stop-color='transparent'/>
+      </radialGradient></defs>
+      <text x='50%' y='52%' fill='hsl(40,5%,55%)' font-family='monospace' font-size='20' text-anchor='middle'>${safe}</text>
+    </svg>`;
+    return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+  };
+  document.querySelectorAll('.project-img').forEach(img => {
+    img.addEventListener('error', function handler(){
+      img.removeEventListener('error', handler);
+      const fallback = placeholderSVG(img.alt);
+      img.src = fallback;
+      img.dataset.full = fallback;
+    }, { once: true });
+  });
+})();
+
+/* ---------- Project image preview (GSAP FLIP-style fullscreen modal) ---------- */
+(function projectImagePreview(){
+  const overlay   = document.getElementById('imgPreviewOverlay');
+  const stage     = overlay ? overlay.querySelector('.img-preview-stage') : null;
+  const previewEl = document.getElementById('imgPreviewEl');
+  const closeBtn  = document.getElementById('imgPreviewClose');
+  const images    = document.querySelectorAll('.project-img');
+  if (!overlay || !stage || !previewEl || !images.length) return;
+
+  const hasFlip = typeof Flip !== 'undefined';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let activeSourceImg = null;
+  let floatTween = null;
+  let isOpen = false;
+  let isAnimating = false;
+  let lastFocused = null;
+  let suppressOpenUntil = 0;
+
+  function viewportTargetRect(naturalRatio){
+    // Target ~75% of viewport width, centered, capped so it never exceeds ~85vh
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    let w = vw * 0.75;
+    let h = w / naturalRatio;
+    const maxH = vh * 0.82;
+    if (h > maxH) { h = maxH; w = h * naturalRatio; }
+    return {
+      width: w, height: h,
+      left: (vw - w) / 2, top: (vh - h) / 2
+    };
+  }
+
+  function startFloat(){
+    if (reduceMotion) return;
+    floatTween = gsap.to(stage, {
+      y: '+=14', duration: 2.2, ease: 'sine.inOut',
+      yoyo: true, repeat: -1
+    });
+  }
+  function stopFloat(){
+    if (floatTween) { floatTween.kill(); floatTween = null; gsap.set(stage, { y: 0 }); }
+  }
+
+  function openPreview(imgEl){
+    if (isOpen || isAnimating) return;
+    isOpen = true;
+    isAnimating = true;
+    activeSourceImg = imgEl;
+    lastFocused = document.activeElement;
+
+    const srcRect = imgEl.getBoundingClientRect();
+    const fullSrc = imgEl.dataset.full || imgEl.src;
+    previewEl.src = fullSrc;
+    previewEl.alt = imgEl.alt || '';
+
+    // Position stage at the source card's exact location/size first (FLIP "before" state)
+    gsap.set(stage, {
+      position: 'fixed',
+      left: srcRect.left, top: srcRect.top,
+      width: srcRect.width, height: srcRect.height,
+      x: 0, y: 0
+    });
+
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    closeBtn.removeAttribute('tabindex');
+
+    const ratio = (imgEl.naturalWidth && imgEl.naturalHeight)
+      ? imgEl.naturalWidth / imgEl.naturalHeight
+      : srcRect.width / srcRect.height;
+    const target = viewportTargetRect(ratio);
+
+    if (reduceMotion) {
+      gsap.set(stage, target);
+      isAnimating = false;
+      closeBtn.focus();
+      return;
+    }
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power3.inOut' },
+      onComplete: () => { isAnimating = false; startFloat(); closeBtn.focus(); }
+    });
+
+    // Image lifts slightly, then enlarges + moves to center (GPU-accelerated transform/size)
+    tl.to(stage, { scale: 1.03, duration: 0.18, ease: 'power2.out' }, 0)
+      .to(stage, {
+        left: target.left, top: target.top,
+        width: target.width, height: target.height,
+        scale: 1, duration: 0.7
+      }, 0.05);
+  }
+
+  function closePreview(){
+    if (!isOpen || isAnimating) return;
+    isOpen = false;
+    isAnimating = true;
+    stopFloat();
+
+    const sourceImg = activeSourceImg;
+    const restoreRect = sourceImg ? sourceImg.getBoundingClientRect() : null;
+
+    // Prevent the stage from intercepting hover as it animates back over the page,
+    // and prevent it from landing on the source thumbnail and re-triggering mouseenter.
+    gsap.set(stage, { pointerEvents: 'none' });
+
+    const finish = () => {
+      isAnimating = false;
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      closeBtn.setAttribute('tabindex', '-1');
+      previewEl.src = '';
+      gsap.set(stage, { pointerEvents: 'auto' });
+      // Brief cooldown: ignore mouseenter-driven opens for a moment so a stationary
+      // cursor sitting over the (now-collapsed) thumbnail doesn't immediately reopen it.
+      suppressOpenUntil = performance.now() + 350;
+      if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+      activeSourceImg = null;
+    };
+
+    if (reduceMotion || !restoreRect) { finish(); return; }
+
+    gsap.to(stage, {
+      left: restoreRect.left, top: restoreRect.top,
+      width: restoreRect.width, height: restoreRect.height,
+      duration: 0.55, ease: 'power3.inOut',
+      onComplete: finish
+    });
+  }
+
+  images.forEach(img => {
+    img.addEventListener('mouseenter', () => {
+      if (performance.now() < suppressOpenUntil) return;
+      openPreview(img);
+    });
+    img.addEventListener('click', () => {
+      if (performance.now() < suppressOpenUntil) return;
+      openPreview(img);
+    });
+    // NOTE: we intentionally do NOT close on leaving the small source thumbnail —
+    // once expanded, the cursor naturally leaves that tiny box, which isn't a close signal.
+  });
+
+  // Close when the mouse leaves the EXPANDED image itself (the stage). Guarded by
+  // isAnimating so this can never fire while the stage is still mid-flight (open or
+  // close transition) — only once it's settled in its fullscreen centered position —
+  // which is what stops it from racing the close-animation as it shrinks back down
+  // over the source thumbnail.
+  function handleStageLeave(){
+    if (isOpen && !isAnimating) closePreview();
+  }
+  stage.addEventListener('mouseleave', handleStageLeave);
+
+  // Close on click outside the image
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closePreview();
+  });
+  closeBtn.addEventListener('click', closePreview);
+
+  // ESC closes + basic focus trap while open
+  document.addEventListener('keydown', (e) => {
+    if (!isOpen) return;
+    if (e.key === 'Escape') { closePreview(); return; }
+    if (e.key === 'Tab') {
+      // Only one focusable element (close button) inside modal — keep focus trapped on it
+      e.preventDefault();
+      closeBtn.focus();
+    }
+  });
+
+  // Keyboard accessibility: allow Enter/Space on focused project images to open preview
+  images.forEach(img => {
+    img.setAttribute('tabindex', '0');
+    img.setAttribute('role', 'button');
+    img.setAttribute('aria-label', (img.alt || 'Project image') + ' — press Enter to preview');
+    img.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPreview(img); }
+    });
+  });
+
+  closeBtn.setAttribute('tabindex', '-1');
+
+  // Reposition open preview on resize (keeps it centered/sized correctly)
+  window.addEventListener('resize', () => {
+    if (!isOpen || !activeSourceImg || isAnimating) return;
+    const ratio = activeSourceImg.naturalWidth && activeSourceImg.naturalHeight
+      ? activeSourceImg.naturalWidth / activeSourceImg.naturalHeight
+      : 16/9;
+    const target = viewportTargetRect(ratio);
+    gsap.set(stage, target);
+  });
+})();
+
 /* ---------- Refresh ScrollTrigger on load ---------- */
 window.addEventListener('load', () => ScrollTrigger.refresh());
